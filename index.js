@@ -3,14 +3,14 @@ window.onload = function() {
 	$("#letter").fitText(0.3);
 	
 	meSpeak.loadConfig("dependencies/mespeak/mespeak_config.json");
-	meSpeak.loadVoice('dependencies/mespeak/voices/en/en-us.json');
-	id = meSpeak.speak('Welcome to Key Sound. Please type the following symbols. . . . . . z');
+	meSpeak.loadVoice('dependencies/mespeak/voices/en/en.json');
 	
-    letter = 'Z';
-	$('#letter')[0].innerHTML = letter;
+	getLetter();
+	
+	id = meSpeak.speak('Welcome to Key Sound. Please type the following symbols. . . . . . ' + letter);
+	//new Audio('test.mp3').play();
 	
 	document.body.onkeydown = function(e){
-	//console.log(String.fromCharCode(e.keyCode) + " ? " + letter);
 		if (letter === String.fromCharCode(e.keyCode)) {
 			meSpeak.stop(id);
 			getNextLetter();
@@ -18,10 +18,14 @@ window.onload = function() {
 	};
 }
 
-getNextLetter = function() {
+getLetter = function() {
 	var possible = "QWERTYUIOPASDFGHJKLZXCVBNM0123456789";
 	letter = possible.charAt(Math.floor(Math.random() * possible.length));
 	$('#letter')[0].innerHTML = letter;
+}
+
+getNextLetter = function() {
+	getLetter();
 	if (letter === "Z") id = meSpeak.speak("z"); // report to mespeak creator
 	else id = meSpeak.speak(letter);
 }
