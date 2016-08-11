@@ -1,6 +1,5 @@
 window.onload = function() {
-	$("#text").fitText(2);
-	$("#letter").fitText(0.3);
+	fitText();
 	
 	meSpeak.loadConfig("dependencies/mespeak/mespeak_config.json");
 	meSpeak.loadVoice('dependencies/mespeak/voices/en/en.json');
@@ -25,6 +24,10 @@ window.onload = function() {
 			any = false;
 			fixText();
 			getNextLetter();
+		} else {
+			meSpeak.stop(id);
+			if (letter === "Z") id = meSpeak.speak("z"); // report to mespeak creator
+			else id = meSpeak.speak(letter);
 		}
 	};
 }
@@ -53,16 +56,22 @@ doStats = function() {
 	console.log("Average time: " + average);
 	$('#text')[0].innerHTML = "Your average time is";
 	if (average < 1000) {
-		$('#letter')[0].innerHTML = average;
-		id = meSpeak.speak("Your average time is " + average + " milliseconds. Press any key to continue");
+		$('#letter')[0].innerHTML = average + "ms";
+		id = meSpeak.speak("Your average time is " + average + " milliseconds. Press any key to practice again.");
 	} else { //change to seconds
 		var newavg = Math.round(average/100) / 10;
-		$('#letter')[0].innerHTML = newavg;
-		id = meSpeak.speak("Your average time is " + newavg + " seconds. Press any key to continue");
+		$('#letter')[0].innerHTML = newavg + "s";
+		id = meSpeak.speak("Your average time is " + newavg + " seconds. Press any key to practice again.");
 	}
+	fitText();
 	any = true;
 }
 
 fixText = function() {
 	$('#text')[0].innerHTML = "Type the symbol";
+}
+
+fitText = function() {
+	$("#text").fitText(2);
+	$("#letter").fitText(0.3);
 }
