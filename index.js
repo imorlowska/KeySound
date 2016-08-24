@@ -9,7 +9,10 @@ window.onload = function() {
 	any = false;
 	
 	id = meSpeak.speak('Welcome to Key Sound. Please type the following symbols. . . . . . ' + letter);
-	//new Audio('test.mp3').play();
+	//audio = new Audio('test.ogg');
+	//audio.play();
+	//audio.pause();
+	
 	
 	document.body.onkeydown = function(e){
 		if (!any && letter === String.fromCharCode(e.keyCode)) {
