@@ -5,34 +5,43 @@ window.onload = function() {
 	meSpeak.loadVoice('dependencies/mespeak/voices/en/en.json');
 	times = [];
 	i = 0;
-	getLetter();
-	any = false;
-	
-	id = meSpeak.speak('Welcome to Key Sound. Please type the following symbols. . . . . . ' + letter);
-	//audio = new Audio('test.ogg');
-	//audio.play();
-	//audio.pause();
-	
+	any = true;
+
+	startTutorial();
 	
 	document.body.onkeydown = function(e){
+	stopSound();
 		if (!any && letter === String.fromCharCode(e.keyCode)) {
-			meSpeak.stop(id);
 			times.push((new Date().getTime()) - start);
-			console.log(i + ": " + times[i]);
 			i++;
 			if (i % 11 === 0) doStats();
 			else getNextLetter();
 		} else if (any) {
-			meSpeak.stop(id);
 			any = false;
 			fixText();
-			getNextLetter();
-		} else {
-			meSpeak.stop(id);
+		} else { //repeat symbol
 			if (letter === "Z") id = meSpeak.speak("z"); // report to mespeak creator
 			else id = meSpeak.speak(letter);
 		}
 	};
+}
+
+stopSound = function() {
+	if (!(typeof id === "undefined")) meSpeak.stop(id);
+	if (!(typeof audio === "undefined")) audio.pause();
+}
+
+startTutorial = function() {
+	audio = new Audio('audio/welcome_headphones.ogg');
+	audio.play();
+	audio.onended = function() {pressAnyKey();};
+}
+
+pressAnyKey = function() {
+	stopSound();
+	audio = new Audio('audio/press_any_key.ogg');
+	any = true;
+	audio.play();
 }
 
 getLetter = function() {
@@ -60,18 +69,33 @@ doStats = function() {
 	$('#text')[0].innerHTML = "Your average time is";
 	if (average < 1000) {
 		$('#letter')[0].innerHTML = average + "ms";
-		id = meSpeak.speak("Your average time is " + average + " milliseconds. Press any key to practice again.");
 	} else { //change to seconds
 		var newavg = Math.round(average/100) / 10;
 		$('#letter')[0].innerHTML = newavg + "s";
-		id = meSpeak.speak("Your average time is " + newavg + " seconds. Press any key to practice again.");
+	}
+	audio = new Audio('audio/average_time.ogg');
+	audio.play();
+	audio.onended = function() {
+		if (average < 1000) {
+			id = meSpeak.speak(average + " milliseconds.");
+		} else { //change to seconds
+			id = meSpeak.speak(newavg + " seconds.");
+		}
+		setTimeout(pressAnyKey, 3000);
 	}
 	fitText();
 	any = true;
 }
 
 fixText = function() {
-	$('#text')[0].innerHTML = "Type the symbol";
+	$('#text')[0].innerHTML = "Type the following symbols";
+	getLetter();
+	audio = new Audio('audio/type.ogg');
+	audio.play();
+	audio.onended = function() {
+		if (letter === "Z") id = meSpeak.speak("z"); // report to mespeak creator
+		else id = meSpeak.speak(letter);
+	}
 }
 
 fitText = function() {
