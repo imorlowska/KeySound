@@ -20,8 +20,7 @@ window.onload = function() {
 			any = false;
 			fixText();
 		} else { //repeat symbol
-			if (letter === "Z") id = meSpeak.speak("z"); // report to mespeak creator
-			else id = meSpeak.speak(letter);
+			speakLetter();
 		}
 	};
 }
@@ -45,7 +44,7 @@ pressAnyKey = function() {
 }
 
 getLetter = function() {
-	var possible = "QWERTYUIOPASDFGHJKLZXCVBNM0123456789";
+	var possible = "1234567890"; //"QWERTYUIOPASDFGHJKLZXCVBNM0123456789";
 	letter = possible.charAt(Math.floor(Math.random() * possible.length));
 	$('#letter')[0].innerHTML = letter;
 	start = new Date().getTime();
@@ -53,8 +52,18 @@ getLetter = function() {
 
 getNextLetter = function() {
 	getLetter();
-	if (letter === "Z") id = meSpeak.speak("z"); // report to mespeak creator
-	else id = meSpeak.speak(letter);
+	speakLetter();
+}
+
+speakLetter = function() {
+	if (letter === "0" || letter === "1" || letter === "2" || letter === "3" || letter === "4" || letter === "5" || letter === "6" || letter === "7" || letter === "8" || letter === "9") {
+		audio = new Audio('audio/symbols/' + letter + '.ogg');
+		audio.play();
+	} else	if (letter === "Z") {
+		id = meSpeak.speak("z"); // report to mespeak creator
+	} else {
+		id = meSpeak.speak(letter);
+	}
 }
 
 doStats = function() {
@@ -93,8 +102,7 @@ fixText = function() {
 	audio = new Audio('audio/type.ogg');
 	audio.play();
 	audio.onended = function() {
-		if (letter === "Z") id = meSpeak.speak("z"); // report to mespeak creator
-		else id = meSpeak.speak(letter);
+		speakLetter();
 	}
 }
 
