@@ -1,6 +1,8 @@
 window.onload = function() {
 	fitText();
 	
+	layout = "qwerty";
+	
 	meSpeak.loadConfig("dependencies/mespeak/mespeak_config.json");
 	meSpeak.loadVoice('dependencies/mespeak/voices/en/en.json');
 	times = [];
@@ -44,7 +46,7 @@ pressAnyKey = function() {
 }
 
 getLetter = function() {
-	var possible = "1234567890"; //"QWERTYUIOPASDFGHJKLZXCVBNM0123456789";
+	var possible = "1234567890QWERTYUIOPASDFGHJKLZXCVBNM";
 	letter = possible.charAt(Math.floor(Math.random() * possible.length));
 	$('#letter')[0].innerHTML = letter;
 	start = new Date().getTime();
@@ -56,14 +58,14 @@ getNextLetter = function() {
 }
 
 speakLetter = function() {
-	if (letter === "0" || letter === "1" || letter === "2" || letter === "3" || letter === "4" || letter === "5" || letter === "6" || letter === "7" || letter === "8" || letter === "9") {
-		audio = new Audio('audio/symbols/' + letter + '.ogg');
-		audio.play();
-	} else	if (letter === "Z") {
+	//if (letter === "0" || letter === "1" || letter === "2" || letter === "3" || letter === "4" || letter === "5" || letter === "6" || letter === "7" || letter === "8" || letter === "9") {
+	audio = new Audio('audio/' + layout + '/' + letter + '.ogg');
+	audio.play();
+	/**} else	if (letter === "Z") {
 		id = meSpeak.speak("z"); // report to mespeak creator
 	} else {
 		id = meSpeak.speak(letter);
-	}
+	}**/
 }
 
 doStats = function() {
