@@ -3,8 +3,6 @@ window.onload = function() {
 	
 	layout = "qwerty";
 	
-	meSpeak.loadConfig("dependencies/mespeak/mespeak_config.json");
-	meSpeak.loadVoice('dependencies/mespeak/voices/en/en.json');
 	times = [];
 	i = 0;
 	any = true;
@@ -12,7 +10,7 @@ window.onload = function() {
 	startTutorial();
 	
 	document.body.onkeydown = function(e){
-	stopSound();
+		stopSound();
 		if (!any && letter === String.fromCharCode(e.keyCode)) {
 			times.push((new Date().getTime()) - start);
 			i++;
@@ -22,27 +20,21 @@ window.onload = function() {
 			any = false;
 			fixText();
 		} else { //repeat symbol
-			speakLetter();
+			speakLetter(letter);
 		}
 	};
 }
 
 stopSound = function() {
-	if (!(typeof id === "undefined")) meSpeak.stop(id);
 	if (!(typeof audio === "undefined")) audio.pause();
 }
 
 startTutorial = function() {
-	audio = new Audio('audio/welcome_headphones.ogg');
-	audio.play();
-	audio.onended = function() {pressAnyKey();};
-}
-
-pressAnyKey = function() {
-	stopSound();
-	audio = new Audio('audio/press_any_key.ogg');
-	any = true;
-	audio.play();
+	audios = [];
+	audios.push(new Audio('audio/welcome_headphones.ogg'));
+	audios.push(new Audio('audio/press_any_key.ogg'));
+	
+	playAudioList(audios);
 }
 
 getLetter = function() {
@@ -54,18 +46,12 @@ getLetter = function() {
 
 getNextLetter = function() {
 	getLetter();
-	speakLetter();
+	speakLetter(letter);
 }
 
-speakLetter = function() {
-	//if (letter === "0" || letter === "1" || letter === "2" || letter === "3" || letter === "4" || letter === "5" || letter === "6" || letter === "7" || letter === "8" || letter === "9") {
-	audio = new Audio('audio/' + layout + '/' + letter + '.ogg');
+speakLetter = function(symbol) {
+	audio = new Audio('audio/' + layout + '/' + symbol + '.ogg');
 	audio.play();
-	/**} else	if (letter === "Z") {
-		id = meSpeak.speak("z"); // report to mespeak creator
-	} else {
-		id = meSpeak.speak(letter);
-	}**/
 }
 
 doStats = function() {
@@ -84,16 +70,7 @@ doStats = function() {
 		var newavg = Math.round(average/100) / 10;
 		$('#letter')[0].innerHTML = newavg + "s";
 	}
-	audio = new Audio('audio/average_time.ogg');
-	audio.play();
-	audio.onended = function() {
-		if (average < 1000) {
-			id = meSpeak.speak(average + " milliseconds.");
-		} else { //change to seconds
-			id = meSpeak.speak(newavg + " seconds.");
-		}
-		setTimeout(pressAnyKey, 3000);
-	}
+	sayAverage(average);
 	fitText();
 	any = true;
 }
@@ -104,7 +81,7 @@ fixText = function() {
 	audio = new Audio('audio/type.ogg');
 	audio.play();
 	audio.onended = function() {
-		speakLetter();
+		speakLetter(letter);
 	}
 }
 
@@ -112,3 +89,82 @@ fitText = function() {
 	$("#text").fitText(2);
 	$("#letter").fitText(0.3);
 }
+
+playAudioList = function(tracks) {
+	if (tracks.length === 0) {
+		return;
+	}
+	audio = tracks[0];
+	audio.play();
+	audio.onended = function() {
+		playAudioList(tracks.slice(1, tracks.length));
+	}
+}
+
+sayAverage = function(average) {
+	var audios = [];
+	if (average < 1000) {
+		var hundreds = Math.floor(average/100);
+		var tens = Math.floor(average/10) % 10;
+		var ones = average % 10;
+		
+		audios = getAudioList(average);
+		audios.push(new Audio('audio/times/mss.ogg'));
+		
+		
+	} else { //change to seconds
+		var number = Math.floor(Math.round(average/100)/10);
+		var point = Math.round(average/100) % 10;
+		
+		audios = getAudioList(number);
+		
+		if (point > 0) {
+			audios.push(new Audio('audio/times/point.ogg'));
+			audios.push(new Audio('audio/times/' + point + '.ogg'));
+		}
+		
+		if (number === 1 && point === 0) {
+			audios.push(new Audio('audio/times/s.ogg'));
+		} else {
+			audios.push(new Audio('audio/times/ss.ogg'));
+		}
+		
+	}
+	audios.unshift(new Audio('audio/average_time.ogg'));
+	audios.push(new Audio('audio/press_any_key.ogg'));
+	playAudioList(audios);
+}
+
+getAudioList = function(number) {
+	var audios = [];
+	var hundreds = Math.floor(number/100);
+	var tens = Math.floor(number/10) % 10;
+	var ones = number % 10;
+	
+	if (hundreds > 0) {
+		audios.push(new Audio('audio/times/' + hundreds + '.ogg'));
+		audios.push(new Audio('audio/times/100.ogg'));
+	}
+	
+	if (tens >= 2) {
+		audios.push(new Audio('audio/times/' + tens + '0.ogg'));
+	}
+	
+	if (tens === 1) {
+		audios.push(new Audio('audio/times/1' + ones + '.ogg'));
+	} else if (ones > 0) {
+		audios.push(new Audio('audio/times/' + ones + '.ogg'));
+	}
+	
+	return audios;
+}
+
+
+
+
+
+
+
+
+
+
