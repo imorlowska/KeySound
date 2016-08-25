@@ -20,7 +20,7 @@ window.onload = function() {
 			any = false;
 			fixText();
 		} else { //repeat symbol
-			speakLetter(letter);
+			speakSymbol(letter);
 		}
 	};
 }
@@ -46,10 +46,10 @@ getLetter = function() {
 
 getNextLetter = function() {
 	getLetter();
-	speakLetter(letter);
+	speakSymbol(letter);
 }
 
-speakLetter = function(symbol) {
+speakSymbol = function(symbol) {
 	audio = new Audio('audio/' + layout + '/' + symbol + '.mp3');
 	audio.play();
 }
@@ -81,7 +81,7 @@ fixText = function() {
 	audio = new Audio('audio/type.mp3');
 	audio.play();
 	audio.onended = function() {
-		speakLetter(letter);
+		speakSymbol(letter);
 	}
 }
 
@@ -104,19 +104,13 @@ playAudioList = function(tracks) {
 sayAverage = function(average) {
 	var audios = [];
 	if (average < 1000) {
-		var hundreds = Math.floor(average/100);
-		var tens = Math.floor(average/10) % 10;
-		var ones = average % 10;
-		
-		audios = getAudioList(average);
+		audios = getNumbersToAudioList(average);
 		audios.push(new Audio('audio/times/mss.mp3'));
-		
-		
 	} else { //change to seconds
 		var number = Math.floor(Math.round(average/100)/10);
 		var point = Math.round(average/100) % 10;
 		
-		audios = getAudioList(number);
+		audios = getNumbersToAudioList(number);
 		
 		if (point > 0) {
 			audios.push(new Audio('audio/times/point.mp3'));
@@ -128,18 +122,24 @@ sayAverage = function(average) {
 		} else {
 			audios.push(new Audio('audio/times/ss.mp3'));
 		}
-		
 	}
-	audios.unshift(new Audio('audio/average_time.mp3'));
+	audios.unshift(new Audio('audio/average_time.mp3')); // add to the front
 	audios.push(new Audio('audio/press_any_key.mp3'));
 	playAudioList(audios);
 }
 
-getAudioList = function(number) {
+getNumbersToAudioList = function(number) {
 	var audios = [];
+	
+	var thousands = Math.floor(number/1000);
 	var hundreds = Math.floor(number/100);
 	var tens = Math.floor(number/10) % 10;
 	var ones = number % 10;
+	
+	if (thousands > 0) {
+		audios.push(new Audio('audio/times/' + thousands + '.mp3'));
+		audios.push(new Audio('audio/times/1000.mp3'));
+	}
 	
 	if (hundreds > 0) {
 		audios.push(new Audio('audio/times/' + hundreds + '.mp3'));
