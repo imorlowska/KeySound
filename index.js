@@ -31,8 +31,8 @@ stopSound = function() {
 
 startTutorial = function() {
 	audios = [];
-	audios.push(new Audio('audio/welcome_headphones.ogg'));
-	audios.push(new Audio('audio/press_any_key.ogg'));
+	audios.push(new Audio('audio/welcome_headphones.mp3'));
+	audios.push(new Audio('audio/press_any_key.mp3'));
 	
 	playAudioList(audios);
 }
@@ -50,7 +50,7 @@ getNextLetter = function() {
 }
 
 speakLetter = function(symbol) {
-	audio = new Audio('audio/' + layout + '/' + symbol + '.ogg');
+	audio = new Audio('audio/' + layout + '/' + symbol + '.mp3');
 	audio.play();
 }
 
@@ -78,7 +78,7 @@ doStats = function() {
 fixText = function() {
 	$('#text')[0].innerHTML = "Type the following symbols";
 	getLetter();
-	audio = new Audio('audio/type.ogg');
+	audio = new Audio('audio/type.mp3');
 	audio.play();
 	audio.onended = function() {
 		speakLetter(letter);
@@ -109,7 +109,7 @@ sayAverage = function(average) {
 		var ones = average % 10;
 		
 		audios = getAudioList(average);
-		audios.push(new Audio('audio/times/mss.ogg'));
+		audios.push(new Audio('audio/times/mss.mp3'));
 		
 		
 	} else { //change to seconds
@@ -119,19 +119,19 @@ sayAverage = function(average) {
 		audios = getAudioList(number);
 		
 		if (point > 0) {
-			audios.push(new Audio('audio/times/point.ogg'));
-			audios.push(new Audio('audio/times/' + point + '.ogg'));
+			audios.push(new Audio('audio/times/point.mp3'));
+			audios.push(new Audio('audio/times/' + point + '.mp3'));
 		}
 		
 		if (number === 1 && point === 0) {
-			audios.push(new Audio('audio/times/s.ogg'));
+			audios.push(new Audio('audio/times/s.mp3'));
 		} else {
-			audios.push(new Audio('audio/times/ss.ogg'));
+			audios.push(new Audio('audio/times/ss.mp3'));
 		}
 		
 	}
-	audios.unshift(new Audio('audio/average_time.ogg'));
-	audios.push(new Audio('audio/press_any_key.ogg'));
+	audios.unshift(new Audio('audio/average_time.mp3'));
+	audios.push(new Audio('audio/press_any_key.mp3'));
 	playAudioList(audios);
 }
 
@@ -142,18 +142,18 @@ getAudioList = function(number) {
 	var ones = number % 10;
 	
 	if (hundreds > 0) {
-		audios.push(new Audio('audio/times/' + hundreds + '.ogg'));
-		audios.push(new Audio('audio/times/100.ogg'));
+		audios.push(new Audio('audio/times/' + hundreds + '.mp3'));
+		audios.push(new Audio('audio/times/100.mp3'));
 	}
 	
 	if (tens >= 2) {
-		audios.push(new Audio('audio/times/' + tens + '0.ogg'));
+		audios.push(new Audio('audio/times/' + tens + '0.mp3'));
 	}
 	
 	if (tens === 1) {
-		audios.push(new Audio('audio/times/1' + ones + '.ogg'));
+		audios.push(new Audio('audio/times/1' + ones + '.mp3'));
 	} else if (ones > 0) {
-		audios.push(new Audio('audio/times/' + ones + '.ogg'));
+		audios.push(new Audio('audio/times/' + ones + '.mp3'));
 	}
 	
 	return audios;
