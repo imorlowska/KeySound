@@ -77,7 +77,7 @@ startTutorial = function(muted) {
 }
 
 getLetter = function() {
-	var possible = "QWERTYUIOPASDFGHJKLZXCVBNM";
+	var possible = "0123456789QWERTYUIOPASDFGHJKLZXCVBNM";
 	letter = possible.charAt(Math.floor(Math.random() * possible.length));
 	$('#letter')[0].innerHTML = letter;
 	start = new Date().getTime();
