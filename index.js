@@ -1,7 +1,7 @@
 window.onload = function() {
 	fitText();
 	
-	layouts = ["qwerty", "qwerty-pl", "dvorak"];
+	layouts = ["qwerty", "qwerty-pl", "dvorak", "flat"];
 	layout_nb = 0;
 	layout = layouts[layout_nb];
 	
