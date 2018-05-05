@@ -1,3 +1,9 @@
+KeySound
+==============
+
+Software for improving accessibility of keyboard usage for the blind and visually impaired.
+
+
 As technology develops it becomes more and more available to people all around the globe. However, in some cases with blind or visually impaired users, this technology is not as accessible as it is for sighted users. For instance, text input for computer systems can pose a problem for less-sighted users as the standard keyboard is difficult to use without full sight. Moreover, existing solutions for blind users can be costly.
 
 
